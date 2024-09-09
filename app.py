@@ -31,7 +31,7 @@ def create_app():
             
     # app.config.from_object(config_class)
     app.config['BOOTSTRAP_BOOTSWATCH_THEME'] = os.environ.get('BST')
-    app.config['SECRET_KEY'] = '938479238479238479'
+    app.config['SECRET_KEY'] = 'SECRET_KEY'
     app.config['DATABASE_FILE'] = 'admin.sqlite'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + app.config['DATABASE_FILE']
     app.config['SQLALCHEMY_ECHO'] = True
