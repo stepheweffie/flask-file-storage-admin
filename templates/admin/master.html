@@ -1,0 +1,36 @@
+{% extends admin_base_template %}
+
+{% block head %}
+{{ super() }}
+
+<style>
+    .control-container {
+            padding-top: 20px;
+    }
+
+    @media (max-width: 991px) {
+    .control-container {
+       padding-top: 0;
+        }
+    }
+
+    .dropzone {
+        border: 4px dashed #ffffff;
+        border-radius: 5px;
+        background: #222;
+        color: #ffffff;
+    }
+
+    .dropzone .dz-message {
+        font-weight: 400;
+    }
+
+    .dropzone .dz-message .note {
+        font-size: 0.8em;
+        font-weight: 200;
+        display: inline;
+        margin-top: 1.4rem;
+    }
+
+</style>
+{% endblock %}

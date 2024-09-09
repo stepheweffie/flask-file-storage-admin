@@ -1,0 +1,165 @@
+{% import 'admin/layout.html' as layout with context -%}
+{% import 'admin/static.html' as admin_static with context %}
+
+
+
+<!DOCTYPE html>
+<html data-bs-theme="light">
+  <head>
+    <title>{% block title %}{% if admin_view.category %}{{ admin_view.category }} - {% endif %}{{ admin_view.name }} - {{ admin_view.admin.name }}{% endblock %}</title>
+   
+    {% block head_meta %}
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">       
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+    {% endblock %}
+
+    {% block head_css %}
+        {{ bootstrap.load_css() }}
+        <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css', rel="stylesheet" {{ admin_csp_nonce_attribute }}>
+
+        {% if admin_view.extra_css %}
+          {% for css_url in admin_view.extra_css %}
+            <link href="{{ css_url }}" rel="stylesheet">
+          {% endfor %}
+        {% endif %}
+
+        <style>
+	    .btn {
+		margin: 2px;
+		}
+
+            .navbar-brand {
+		color: #dbff33;	
+	        }
+
+	    .hide {
+                display: none;
+                }
+
+	    body.bootstrap-dark {
+    		background-color: #222;
+    		color: #fff;
+		}
+
+   	    .bootstrap-dark .card {
+    		background-color: #333;
+		}
+
+	    .bootstrap-dark .table {
+    		color: #fff;
+		}
+
+	    .bootstrap-dark .navbar-dark {
+    		background-color: #333 !important;
+		}
+
+	    .bootstrap-dark .navbar-brand {
+    		color: #fff !important;
+		}
+	    
+	    .bootstrap-dark .card-body {
+		color: #fff !important;
+		}
+           
+   	    .bootstrap-dark .save {
+		color: #fff !important;
+		}
+	    
+	    .bootstrap-dark .toggle {
+		background: #fff;
+	        color: black;
+		}
+	    
+	    .bootstrap-dark .dropzone {
+		background-color: #222;
+		}
+        </style>
+   
+ {% endblock %}
+
+    {% block head %}
+	<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    {% endblock %}
+
+{% block head_tail %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle dark mode
+            function toggleDarkMode() {
+            document.body.classList.toggle('bootstrap-dark');
+        }
+    </script>
+
+{% endblock %}
+
+</head>
+
+
+        {% block messages %}
+            {{ layout.messages() }}
+        {% endblock %}
+
+        {# store the jinja2 context for form_rules rendering logic #}
+        {% set render_ctx = h.resolve_ctx() %}
+
+
+<body>
+{% block page_body %}
+
+	    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2" role="navigation">	
+
+            	<!-- Brand and toggle get grouped for better mobile display -->
+		{% block main_menu %}
+                <ul class="nav navbar-nav mr-auto">
+    		{% block brand %}
+               		<center> <a class="navbar-brand" href="{{ admin_view.admin.url }}">{{ admin_view.admin.name }}</a></center>
+            	{% endblock %}
+		
+		{{ layout.menu() }}
+			<button class="btn toggle btn-outline-light" onclick="toggleDarkMode()">Dark Mode</button>
+                </ul>
+            {% endblock %}
+
+                {% block menu_links %}
+                <ul class="nav navbar-nav navbar-right">
+             
+		      {{ layout.menu_links() }}
+
+                </ul>
+
+                {% endblock %}
+            {% block access_control %}
+            {% endblock %}
+            
+	    </nav>
+
+{% endblock %} 
+<div class='container'>
+{% block body %}{% endblock %}
+</div>
+
+
+{% block tail_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="{{ admin_static.url(filename='vendor/jquery.min.js', v='3.5.1') }}" type="text/javascript"></script>
+
+    {% if admin_view.extra_js %}
+        {% for js_url in admin_view.extra_js %}
+            <script src="{{ js_url }}" type="text/javascript"></script>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}
+
+    {% block tail %}
+    {% endblock %}
+  </body>
+</html>

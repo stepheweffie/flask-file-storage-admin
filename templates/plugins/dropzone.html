@@ -1,0 +1,121 @@
+            <p>
+                Click Below To Upload
+            </p>
+
+                <div class='col-xl-6 col-lg-6'>
+                        <div class="card">
+
+                        <form id='uploadForm'>
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                        <button class='btn save' type="submit" name="save" value="save">Save Uploads</button>
+                        </form>
+                                        <div class="card-body">
+
+                        <form action="{{ url_for('admin.index') }}" method='POST' enctype="multipart/form-data" class="dropzone" name="dropzone" id="my-great-dropzone">                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        </form>
+                                        </div>
+                        </div>
+                </div>
+
+            <div class='col-xl-6 col-lg-6'>
+                <div class="card">
+                    <div class="card-body">
+                        <h3>Uploaded Files</h3>
+                            <ul class="list-group">
+
+                                    {% for upload in uploads %}
+                                        <li class="list-group-item">
+                                        <i class="fas fa-{% if upload.type == 'video' %}video{% elif upload.type == 'image' %}image{% else %}file{% endif %}"></i>
+                                        {{ upload.name }}
+                                        <small>({{ upload.type }})</small>
+                                        </li>
+
+                                        <input type="hidden" name="filename" value="{{ upload.name }}">
+
+                                    {% endfor %}
+
+
+        <form id="saveForm" action="{{ url_for('admin.clear_uploads') }}" method="POST" onsubmit="return confirm('Are you sure you want to clear all uploads?');">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                        <button class='btn save' type="submit" name="store" value="store"> Store Uploads</button>
+        </form>
+
+                            <div id="upload-status"></div>
+                            </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+var socket = io();
+$(document).ready(function() {
+    $('#uploadForm').on('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: "{{ url_for('admin.index') }}",
+            type: 'POST',
+            data: formData,
+            success: function (data) {
+                $('#upload-status').html('<div class="alert alert-success">Files uploaded successfully!</div>');
+            },
+            error: function (data) {
+                $('#upload-status').html('<div class="alert alert-danger">Error uploading files. Please try again.</div>');
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+
+    });
+});
+
+<!--
+
+--!>
+
+Dropzone.options.myGreatDropzone = {
+
+    url: "{{ url_for('admin.index') }}",
+    paramName: "file",
+    maxFilesize: 2000, // MB,
+    autoProcessQueue: true,
+    uploadMultiple: true,
+    parallelUploads: 3,
+    maxFiles: 3,
+    acceptedFiles: "image/*,application/pdf,.mp4,.mov,.mp3",
+    addRemoveLinks: true,
+    method: 'post',
+
+    dictDefaultMessage: "<i class='fa fa-cloud-upload'></i><br>Drop files here or click to upload",
+    dictFileTooBig: "File is too big ({{filesize}}MB). Max filesize: {{maxFilesize}}MB.",
+    dictInvalidFileType: "You can't upload files of this type.",
+    dictResponseError: "Server responded with {{statusCode}} code.",
+    dictCancelUpload: "Cancel upload",
+    dictUploadCanceled: "Upload canceled.",
+    dictRemoveFile: "Remove file",
+    dictMaxFilesExceeded: "You can not upload any more files.",
+
+    headers: {
+      'X-CSRF-TOKEN':'{{ csrf_token() }}'
+    },
+    init: function() {
+      this.on("addedfile", function(file) {
+        console.log("Added file.");
+      });
+      this.on("success", function(file, response) {
+        console.log("File successfully uploaded.");
+      });
+      this.on("error", function(file, errorMessage) {
+        console.log("Error uploading file: " + errorMessage);
+      });
+    }
+  };
+
+</script>
+
+

@@ -1,0 +1,44 @@
+{% extends 'admin/master.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{{ super() }}
+{% block head %}
+{{ super() }}
+
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+
+{% block content %}
+
+
+<div class="container-fluid dashboard-container">
+        <div class="row">
+        <div class="col-12">
+                <h1>{{ username }} Dashboard</h1>
+        </div>
+        </div>
+
+        <div class="row">
+        <div class="col-lg-6 control-container">
+
+            <p class="lead">
+                Control Your Content
+            </p>
+	</div>
+
+	<!-- plugins --!>
+
+	{% for plugin in plugins %}
+        	<div class="plugin-container">
+            		<h3>{{ plugin.name }}</h3>
+            		{{ plugin.content|safe }}
+        	</div>
+    	{% endfor %}
+	</div>
+</div>
+
+
+{% endblock %}
+{% endblock %}
